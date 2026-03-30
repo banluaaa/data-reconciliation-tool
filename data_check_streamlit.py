@@ -101,6 +101,9 @@ def add_book_mapping(df: pd.DataFrame) -> pd.DataFrame:
 
 def add_simplified_isin(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
+    df['PRODUCT_CODE.ISIN'] = df['PRODUCT_CODE.ISIN'].replace({
+        'XUCM6 Curncy': 'SGXDB1216058'
+    })
     df['simplified_ISIN'] = df['PRODUCT_CODE.ISIN'].str.split().str[0]
     return df
 
@@ -160,6 +163,9 @@ def analyze_quantity_matches(df: pd.DataFrame) -> pd.DataFrame:
         
         if sec in future_cases and abs(cal - pos * 1000) < 0.001:
             cal = cal / 1000
+            
+        if sec=='XUCM6 SGX'and abs(cal * 100000 - pos) < 0.001:
+            cal = cal * 100000
         
         return pos - cal
     
